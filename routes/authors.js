@@ -12,19 +12,20 @@ router.get('/', async (req, res) =>{
     try {
         
         const authors = await Author.find(searchOptions)
-        console.log(searchOptions)
-        console.log(authors)
+        //render the authors/index view, passing in the list of matching authors as well as the query (to re-populate feilds)
         res.render('authors/index', {
             authors: authors,
             searchOptions: req.query
              })
     } catch {
+        //if the promise is rejected, go back to the home page
         res.redirect('/')
     }
 })
 
-// New Authors
+// New Authors (view page to submit new author)
 router.get('/new', (req, res) => {
+    //render page, passing in a new (blank author object)
     res.render('authors/new', { author: new Author()})
 })
 
@@ -38,6 +39,7 @@ const newAuthor = await author.save()
 //  res.redirect(`authors/${newAuthor.id}`)
             res.redirect(`authors`)
     } catch {
+        //if promise fails, go back to the new page, passing back the author (so we can use the name to populate the feild)
         res.render('authors/new', {
                         author: author,
                         errorMessage: 'Error creating author'
